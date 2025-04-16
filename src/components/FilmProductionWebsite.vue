@@ -1,24 +1,53 @@
 <template>
   <div class="site-container">
-    <!-- Hero Section with Video -->
-    <section id="home" ref="heroSection" class="hero-section">
-      <div class="hero-overlay"></div>
-      <div class="video-container">
-        <video 
-          ref="heroVideo" 
-          class="hero-video"
-          muted 
-          loop 
-          playsinline
-          preload="auto"
-        >
-          <!-- For demo purposes, using a placeholder video. Replace with your actual video -->
-          <source src="https://assets.mixkit.co/videos/preview/mixkit-set-of-plateaus-seen-from-the-heights-in-a-sunset-32809-large.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
+    <!-- Header with Navigation -->
+    <header class="site-header">
+      <div class="container">
+        <div class="header-content">
+          <!-- Navigation -->
+          <nav class="main-nav" :class="{ 'mobile-nav-open': mobileMenuOpen }">
+            <ul class="nav-list">
+              <li><a href="#home" class="nav-link" @click="closeMobileMenu">Home</a></li>
+              <li><a href="#services" class="nav-link" @click="closeMobileMenu">Services</a></li>
+              <li><a href="#portfolio" class="nav-link" @click="closeMobileMenu">Portfolio</a></li>
+              <li><a href="#team" class="nav-link" @click="closeMobileMenu">Team</a></li>
+              <li><a href="#contact" class="nav-link" @click="closeMobileMenu">Contact</a></li>
+            </ul>
+          </nav>
+          
+          <!-- Mobile Menu Button -->
+          <button class="mobile-menu-button" @click="toggleMobileMenu" aria-label="Toggle menu">
+            <Menu v-if="!mobileMenuOpen" class="menu-icon" />
+            <X v-else class="menu-icon" />
+          </button>
+        </div>
       </div>
+    </header>
+
+    <!-- Fixed Video Background -->
+    <div class="fixed-video-container">
+      <div class="video-overlay"></div>
+      <video 
+        ref="heroVideo" 
+        class="hero-video"
+        muted 
+        loop 
+        playsinline
+        preload="auto"
+      >
+        <source src="https://bszjlqnesid8iykp.public.blob.vercel-storage.com/video/jt_steel_example_7%20%281080p%29-XRjUtovSirFGqlVM5fotb5em99evz2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" ref="heroSection" class="hero-section">
       <div class="hero-content">
-        <h1 class="hero-title">{{ heroContent?.title || 'Bringing Stories to Life' }}</h1>
+        <img 
+          src="https://bszjlqnesid8iykp.public.blob.vercel-storage.com/site/Untitled-4%20%282%29-Kt8eC0ZQBMik496K4HIyixCcfDGh6d.png" 
+          alt="High Desert Films" 
+          class="hero-logo"
+        />
         <p class="hero-subtitle">{{ heroContent?.subtitle || 'Award-winning film production company creating cinematic experiences that captivate audiences worldwide.' }}</p>
         <button class="primary-button">
           {{ heroContent?.buttonText || 'Our Showreel' }}
@@ -26,162 +55,165 @@
       </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="services-section">
-      <div class="container">
-        <h2 class="section-title">{{ servicesContent?.title || 'Our Services' }}</h2>
-        <div class="services-grid">
-          <div v-for="(service, index) in services" :key="index" class="service-card">
-            <component :is="getIconComponent(service.icon)" class="service-icon" />
-            <h3 class="service-title">{{ service.title }}</h3>
-            <p class="service-description">{{ service.description }}</p>
+    <!-- Content Container (scrolls over video) -->
+    <div class="content-container">
+      <!-- Services Section -->
+      <section id="services" class="services-section">
+        <div class="container">
+          <h2 class="section-title">{{ servicesContent?.title || 'Our Services' }}</h2>
+          <div class="services-grid">
+            <div v-for="(service, index) in services" :key="index" class="service-card">
+              <component :is="getIconComponent(service.icon)" class="service-icon" />
+              <h3 class="service-title">{{ service.title }}</h3>
+              <p class="service-description">{{ service.description }}</p>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio-section">
-      <div class="container">
-        <h2 class="section-title">{{ portfolioContent?.title || 'Our Work' }}</h2>
-        <div class="portfolio-grid">
-          <div v-for="(project, index) in projects" :key="index" class="portfolio-item">
-            <div class="portfolio-overlay">
-              <div class="portfolio-details">
-                <h3 class="portfolio-item-title">{{ project.title }}</h3>
-                <p class="portfolio-item-category">{{ project.category }}</p>
-              </div>
-            </div>
-            <img :src="getImageUrl(project.mainImage) || project.image" alt="Project thumbnail" class="portfolio-image" />
-          </div>
-        </div>
-        <div class="portfolio-action">
-          <button class="secondary-button">
-            {{ portfolioContent?.buttonText || 'View All Projects' }}
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Team Section -->
-    <section id="team" class="team-section">
-      <div class="container">
-        <h2 class="section-title">{{ teamContent?.title || 'Meet Our Team' }}</h2>
-        <div class="team-grid">
-          <div v-for="(member, index) in teamMembers" :key="index" class="team-member">
-            <div class="member-photo-container">
-              <img :src="getImageUrl(member.photo) || member.photo" alt="Team member" class="member-photo" />
-            </div>
-            <h3 class="member-name">{{ member.name }}</h3>
-            <p class="member-role">{{ member.role }}</p>
-            <p class="member-bio">{{ member.bio }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact-section">
-      <div class="container">
-        <h2 class="section-title">{{ contactContent?.title || 'Get In Touch' }}</h2>
-        <div class="contact-grid">
-          <div class="contact-info">
-            <h3 class="contact-subtitle">{{ contactContent?.subtitle || 'Contact Information' }}</h3>
-            <p class="contact-description">{{ contactContent?.description || 'Ready to bring your vision to life? Contact us today to discuss your project.' }}</p>
-            
-            <div class="contact-details">
-              <div class="contact-item">
-                <MapPin class="contact-icon" />
-                <span>{{ contactInfo?.address || '123 Film Studio Way, Hollywood, CA 90028' }}</span>
-              </div>
-              <div class="contact-item">
-                <Phone class="contact-icon" />
-                <span>{{ contactInfo?.phone || '(323) 555-1234' }}</span>
-              </div>
-              <div class="contact-item">
-                <Mail class="contact-icon" />
-                <span>{{ contactInfo?.email || 'info@highdesertfilms.com' }}</span>
-              </div>
-            </div>
-            
-            <div class="social-links">
-              <a v-for="(social, index) in socialLinks" :key="index" :href="social.url" class="social-link">
-                <component :is="getIconComponent(social.platform)" class="social-icon" />
-              </a>
-            </div>
-          </div>
-          
-          <div class="contact-form-container">
-            <form @submit.prevent="submitForm" class="contact-form">
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="name" class="form-label">Name</label>
-                  <input type="text" id="name" v-model="form.name" class="form-input" required />
-                </div>
-                <div class="form-group">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" id="email" v-model="form.email" class="form-input" required />
+      <!-- Portfolio Section -->
+      <section id="portfolio" class="portfolio-section">
+        <div class="container">
+          <h2 class="section-title">{{ portfolioContent?.title || 'Our Work' }}</h2>
+          <div class="portfolio-grid">
+            <div v-for="(project, index) in projects" :key="index" class="portfolio-item">
+              <div class="portfolio-overlay">
+                <div class="portfolio-details">
+                  <h3 class="portfolio-item-title">{{ project.title }}</h3>
+                  <p class="portfolio-item-category">{{ project.category }}</p>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="subject" class="form-label">Subject</label>
-                <input type="text" id="subject" v-model="form.subject" class="form-input" required />
-              </div>
-              <div class="form-group">
-                <label for="message" class="form-label">Message</label>
-                <textarea id="message" v-model="form.message" rows="5" class="form-textarea" required></textarea>
-              </div>
-              <button type="submit" class="primary-button">
-                Send Message
-              </button>
-            </form>
+              <img :src="getImageUrl(project.mainImage) || project.image" alt="Project thumbnail" class="portfolio-image" />
+            </div>
+          </div>
+          <div class="portfolio-action">
+            <button class="secondary-button">
+              {{ portfolioContent?.buttonText || 'View All Projects' }}
+            </button>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Footer -->
-    <footer class="site-footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-column">
-            <h3 class="footer-title">{{ siteInfo?.companyName || 'HIGH DESERT FILMS' }}</h3>
-            <p class="footer-text">{{ siteInfo?.tagline || 'Award-winning film production company creating cinematic experiences in the high desert since 2005.' }}</p>
-          </div>
-          <div class="footer-column">
-            <h4 class="footer-heading">Quick Links</h4>
-            <ul class="footer-links">
-              <li><a href="#home" class="footer-link">Home</a></li>
-              <li><a href="#services" class="footer-link">Services</a></li>
-              <li><a href="#portfolio" class="footer-link">Portfolio</a></li>
-              <li><a href="#team" class="footer-link">Team</a></li>
-              <li><a href="#contact" class="footer-link">Contact</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4 class="footer-heading">Services</h4>
-            <ul class="footer-links">
-              <li v-for="(service, index) in services.slice(0, 5)" :key="index">
-                <a href="#" class="footer-link">{{ service.title }}</a>
-              </li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h4 class="footer-heading">Newsletter</h4>
-            <p class="footer-text">Subscribe to our newsletter for the latest updates.</p>
-            <form @submit.prevent="subscribeNewsletter" class="newsletter-form">
-              <input type="email" v-model="newsletter" placeholder="Your email" class="newsletter-input" required />
-              <button type="submit" class="newsletter-button">
-                <Send class="newsletter-icon" />
-              </button>
-            </form>
+      <!-- Team Section -->
+      <section id="team" class="team-section">
+        <div class="container">
+          <h2 class="section-title">{{ teamContent?.title || 'Meet Our Team' }}</h2>
+          <div class="team-grid">
+            <div v-for="(member, index) in teamMembers" :key="index" class="team-member">
+              <div class="member-photo-container">
+                <img :src="getImageUrl(member.photo) || member.photo" alt="Team member" class="member-photo" />
+              </div>
+              <h3 class="member-name">{{ member.name }}</h3>
+              <p class="member-role">{{ member.role }}</p>
+              <p class="member-bio">{{ member.bio }}</p>
+            </div>
           </div>
         </div>
-        <div class="footer-bottom">
-          <p class="copyright">&copy; {{ new Date().getFullYear() }} {{ siteInfo?.companyName || 'High Desert Films' }}. All rights reserved.</p>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="contact-section">
+        <div class="container">
+          <h2 class="section-title">{{ contactContent?.title || 'Get In Touch' }}</h2>
+          <div class="contact-grid">
+            <div class="contact-info">
+              <h3 class="contact-subtitle">{{ contactContent?.subtitle || 'Contact Information' }}</h3>
+              <p class="contact-description">{{ contactContent?.description || 'Ready to bring your vision to life? Contact us today to discuss your project.' }}</p>
+              
+              <div class="contact-details">
+                <div class="contact-item">
+                  <MapPin class="contact-icon" />
+                  <span>{{ contactInfo?.address || '123 Film Studio Way, Hollywood, CA 90028' }}</span>
+                </div>
+                <div class="contact-item">
+                  <Phone class="contact-icon" />
+                  <span>{{ contactInfo?.phone || '(323) 555-1234' }}</span>
+                </div>
+                <div class="contact-item">
+                  <Mail class="contact-icon" />
+                  <span>{{ contactInfo?.email || 'info@highdesertfilms.com' }}</span>
+                </div>
+              </div>
+              
+              <div class="social-links">
+                <a v-for="(social, index) in socialLinks" :key="index" :href="social.url" class="social-link">
+                  <component :is="getIconComponent(social.platform)" class="social-icon" />
+                </a>
+              </div>
+            </div>
+            
+            <div class="contact-form-container">
+              <form @submit.prevent="submitForm" class="contact-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" v-model="form.name" class="form-input" required />
+                  </div>
+                  <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" v-model="form.email" class="form-input" required />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="subject" class="form-label">Subject</label>
+                  <input type="text" id="subject" v-model="form.subject" class="form-input" required />
+                </div>
+                <div class="form-group">
+                  <label for="message" class="form-label">Message</label>
+                  <textarea id="message" v-model="form.message" rows="5" class="form-textarea" required></textarea>
+                </div>
+                <button type="submit" class="primary-button">
+                  Send Message
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-      </div>
-    </footer>
+      </section>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-column">
+              <h3 class="footer-title">{{ siteInfo?.companyName || 'HIGH DESERT FILMS' }}</h3>
+              <p class="footer-text">{{ siteInfo?.tagline || 'Award-winning film production company creating cinematic experiences in the high desert since 2005.' }}</p>
+            </div>
+            <div class="footer-column">
+              <h4 class="footer-heading">Quick Links</h4>
+              <ul class="footer-links">
+                <li><a href="#home" class="footer-link">Home</a></li>
+                <li><a href="#services" class="footer-link">Services</a></li>
+                <li><a href="#portfolio" class="footer-link">Portfolio</a></li>
+                <li><a href="#team" class="footer-link">Team</a></li>
+                <li><a href="#contact" class="footer-link">Contact</a></li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4 class="footer-heading">Services</h4>
+              <ul class="footer-links">
+                <li v-for="(service, index) in services.slice(0, 5)" :key="index">
+                  <a href="#" class="footer-link">{{ service.title }}</a>
+                </li>
+              </ul>
+            </div>
+            <div class="footer-column">
+              <h4 class="footer-heading">Newsletter</h4>
+              <p class="footer-text">Subscribe to our newsletter for the latest updates.</p>
+              <form @submit.prevent="subscribeNewsletter" class="newsletter-form">
+                <input type="email" v-model="newsletter" placeholder="Your email" class="newsletter-input" required />
+                <button type="submit" class="newsletter-button">
+                  <Send class="newsletter-icon" />
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p class="copyright">&copy; {{ new Date().getFullYear() }} {{ siteInfo?.companyName || 'High Desert Films' }}. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
     
     <!-- Loading State -->
     <div v-if="loading" class="loading-overlay">
@@ -197,7 +229,8 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { 
   Film, Video, Camera, Clapperboard, Tv, PenTool, 
-  MapPin, Phone, Mail, Instagram, Twitter, Youtube, Linkedin, Send 
+  MapPin, Phone, Mail, Instagram, Twitter, Youtube, Linkedin, Send,
+  Menu, X
 } from 'lucide-vue-next';
 
 // Initialize default data first to avoid reference errors
@@ -215,9 +248,26 @@ const contactInfo = ref(null);
 const loading = ref(false);
 const heroVideo = ref(null);
 const heroSection = ref(null);
+const mobileMenuOpen = ref(false);
 let observer = null;
 let sanityClient = null;
 let imageUrlBuilder = null;
+
+// Toggle mobile menu
+const toggleMobileMenu = () => {
+  mobileMenuOpen.value = !mobileMenuOpen.value;
+  if (mobileMenuOpen.value) {
+    document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
+  } else {
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+};
+
+// Close mobile menu
+const closeMobileMenu = () => {
+  mobileMenuOpen.value = false;
+  document.body.style.overflow = '';
+};
 
 // Initialize with default data
 const initializeDefaultData = () => {
@@ -421,30 +471,6 @@ const fetchContent = async () => {
   }
 };
 
-// Handle scroll events to control video playback speed and position
-const handleScroll = () => {
-  if (!heroVideo.value || !heroSection.value) return;
-  
-  const rect = heroSection.value.getBoundingClientRect();
-  const windowHeight = window.innerHeight;
-  
-  // Calculate how far the hero section is scrolled (0 = fully visible at top, 1 = fully scrolled out of view)
-  const scrollProgress = 1 - (rect.bottom / (windowHeight + rect.height));
-  
-  if (scrollProgress >= 0 && scrollProgress <= 1) {
-    // Adjust video playback based on scroll position
-    if (heroVideo.value.duration) {
-      // Map scroll progress to video time (0-1 to 0-duration)
-      const targetTime = scrollProgress * heroVideo.value.duration;
-      
-      // Only update if the difference is significant to avoid constant seeking
-      if (Math.abs(heroVideo.value.currentTime - targetTime) > 0.5) {
-        heroVideo.value.currentTime = targetTime;
-      }
-    }
-  }
-};
-
 // Contact form
 const form = ref({
   name: '',
@@ -510,30 +536,14 @@ onMounted(() => {
   }
 
   // Set up video playback
-  if (heroVideo.value && heroSection.value) {
-    // Create an Intersection Observer to detect when the hero section is visible
+  if (heroVideo.value) {
     try {
-      observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            // Play the video when the hero section is in view
-            heroVideo.value.play().catch(error => {
-              console.error("Video play failed:", error);
-            });
-          } else {
-            // Pause the video when the hero section is out of view
-            heroVideo.value.pause();
-          }
-        });
-      }, { threshold: 0.1 }); // Trigger when at least 10% of the hero is visible
-      
-      // Start observing the hero section
-      observer.observe(heroSection.value);
-      
-      // Also handle scroll events for more dynamic control
-      window.addEventListener('scroll', handleScroll);
+      // Play the video when it's loaded
+      heroVideo.value.play().catch(error => {
+        console.error("Video play failed:", error);
+      });
     } catch (error) {
-      console.error('Error setting up video observer:', error);
+      console.error('Error setting up video:', error);
     }
   }
 });
@@ -547,7 +557,7 @@ onUnmounted(() => {
       console.error('Error cleaning up observer:', error);
     }
   }
-  window.removeEventListener('scroll', handleScroll);
+  document.body.style.overflow = ''; // Ensure scrolling is restored
 });
 </script>
 
@@ -565,7 +575,8 @@ onUnmounted(() => {
   --color-zinc-900: #18181b;
   --color-amber-500: #f59e0b;
   --color-amber-600: #d97706;
-  --color-yellow: #FED016;
+  --color-red: #F54E22;
+  --color-yellow: #E8892D;
   --font-thin: 100;
   --font-light: 200;
   --font-regular: 300;
@@ -594,8 +605,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .site-container {
   min-height: 100vh;
-  background-color: var(--color-black);
+  background-color: transparent;
   color: var(--color-white);
+  position: relative;
 }
 
 .container {
@@ -605,9 +617,244 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0 1rem;
 }
 
+/* Fixed Video Background */
+.fixed-video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+  z-index: 2;
+}
+
+.hero-video {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Content Container */
+.content-container {
+  position: relative;
+  z-index: 3;
+  background: transparent;
+}
+
+/* Header Styles */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1rem 0;
+  background-color: var(--color-black);
+  transition: background-color 0.3s ease;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Right justify the navigation */
+}
+
+/* Navigation Styles */
+.main-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .main-nav {
+    display: block;
+  }
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: var(--color-white);
+  text-decoration: none;
+  font-weight: var(--font-light);
+  font-size: 1rem;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--color-yellow);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-yellow);
+  transition: width 0.3s;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Mobile Menu Button */
+.mobile-menu-button {
+  display: block;
+  background: none;
+  border: none;
+  color: var(--color-white);
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 101;
+}
+
+.menu-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .mobile-menu-button {
+    display: none;
+  }
+}
+
+/* Mobile Navigation */
+.mobile-nav-open {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 100;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.mobile-nav-open .nav-list {
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.mobile-nav-open .nav-link {
+  font-size: 1.5rem;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  text-align: center;
+  padding: 0 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-logo {
+  max-width: 80%;
+  height: auto;
+  margin-bottom: 2rem;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .hero-logo {
+    max-width: 60%;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-logo {
+    max-width: 80%;
+  }
+}
+
+/* Services Section */
+.services-section {
+  padding: 5rem 0;
+  background-color: var(--color-zinc-900);
+  position: relative;
+  z-index: 3;
+}
+
+/* Portfolio Section */
+.portfolio-section {
+  padding: 5rem 0;
+  background-color: var(--color-black);
+  position: relative;
+  z-index: 3;
+}
+
+/* Team Section */
+.team-section {
+  padding: 5rem 0;
+  background-color: var(--color-zinc-900);
+  position: relative;
+  z-index: 3;
+}
+
+/* Contact Section */
+.contact-section {
+  padding: 5rem 0;
+  background-color: var(--color-black);
+  position: relative;
+  z-index: 3;
+}
+
+/* Footer */
+.site-footer {
+  padding: 3rem 0;
+  background-color: var(--color-zinc-900);
+  border-top: 1px solid var(--color-zinc-800);
+  position: relative;
+  z-index: 3;
+}
+
 /* Section Styles */
 section {
-  scroll-margin-top: 0;
+  scroll-margin-top: 5rem;
 }
 
 .section-title {
@@ -655,75 +902,7 @@ section {
   color: var(--color-black);
 }
 
-/* Hero Section */
-.hero-section {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
-  z-index: 10;
-}
-
-.video-container {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-
-.hero-video {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 20;
-  text-align: center;
-  padding: 0 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.hero-title {
-  font-size: 2.25rem;
-  margin-bottom: 1rem;
-  font-weight: var(--font-regular);
-}
-
-.hero-subtitle {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  max-width: 36rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-@media (min-width: 768px) {
-  .hero-title {
-    font-size: 3.75rem;
-  }
-  
-  .hero-subtitle {
-    font-size: 1.5rem;
-  }
-}
-
-/* Services Section */
-.services-section {
-  padding: 5rem 0;
-  background-color: var(--color-zinc-900);
-}
-
+/* Services Grid */
 .services-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -770,12 +949,7 @@ section {
   color: var(--color-zinc-300);
 }
 
-/* Portfolio Section */
-.portfolio-section {
-  padding: 5rem 0;
-  background-color: var(--color-black);
-}
-
+/* Portfolio Grid */
 .portfolio-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -843,12 +1017,7 @@ section {
   margin-top: 3rem;
 }
 
-/* Team Section */
-.team-section {
-  padding: 5rem 0;
-  background-color: var(--color-zinc-900);
-}
-
+/* Team Grid */
 .team-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -901,12 +1070,7 @@ section {
   font-size: 0.875rem;
 }
 
-/* Contact Section */
-.contact-section {
-  padding: 5rem 0;
-  background-color: var(--color-black);
-}
-
+/* Contact Grid */
 .contact-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1022,13 +1186,7 @@ section {
   box-shadow: 0 0 0 2px var(--color-yellow);
 }
 
-/* Footer */
-.site-footer {
-  padding: 3rem 0;
-  background-color: var(--color-zinc-900);
-  border-top: 1px solid var(--color-zinc-800);
-}
-
+/* Footer Grid */
 .footer-grid {
   display: grid;
   grid-template-columns: 1fr;
