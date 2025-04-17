@@ -35,7 +35,7 @@
         playsinline
         preload="auto"
       >
-        <source src="https://bszjlqnesid8iykp.public.blob.vercel-storage.com/video/jt_steel_example_7%20%281080p%29-XRjUtovSirFGqlVM5fotb5em99evz2.mp4" type="video/mp4">
+        <source :src="heroContent?.videoUrl" type="video/mp4">
         Your browser does not support the video tag.
       </video>
     </div>
@@ -512,11 +512,18 @@ onMounted(() => {
           const imageUrlBuilderModule = await import('@sanity/image-url');
           
           // Initialize Sanity client
+          // sanityClient = createClient({
+          //   projectId: 'your-project-id', // Replace with your actual project ID
+          //   dataset: 'production',
+          //   useCdn: true,
+          //   apiVersion: '2023-05-03',
+          // });
+
           sanityClient = createClient({
-            projectId: 'your-project-id', // Replace with your actual project ID
+            projectId: '6vlp5tis',
             dataset: 'production',
-            useCdn: true,
-            apiVersion: '2023-05-03',
+            useCdn: true, // set to `false` to bypass the edge cache
+            apiVersion: '2025-04-17',
           });
           
           // Initialize image URL builder
@@ -536,6 +543,7 @@ onMounted(() => {
   }
 
   // Set up video playback
+
   if (heroVideo.value) {
     try {
       // Play the video when it's loaded
